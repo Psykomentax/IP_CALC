@@ -13,18 +13,17 @@ app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
 
-# --- Stockage session en mémoire (OK pour un seul serveur/worker).
-# Pour plusieurs workers ou redémarrages: Redis.
-SESSIONS = {}  # sid -> dict(score_total, total_possible, current_quiz)
+
+SESSIONS = {}  
 
 @dataclass
 class QuizState:
     base_ip: ipaddress.IPv4Address
     network: ipaddress.IPv4Network
-    questions: list  # [(label, answer_str), ...]
+    questions: list  
 
 
-# --- Logique réseau (reprend ton code, sans Tkinter) ---
+
 def generer_ip():
     while True:
         classe = random.choice(["A", "B", "C"])
@@ -173,7 +172,7 @@ def api_reset(sid: str | None = Cookie(default=None)):
 
     session["score_total"] = 0.0
     session["total_possible"] = 0
-    session["current_quiz"] = None  # optionnel, mais propre
+    session["current_quiz"] = None  
 
     payload = {
         "score_total": session["score_total"],
